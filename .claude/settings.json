@@ -1,5 +1,5 @@
 {
-  "_readme": "Claude Code permissions. Edit 'allow' list to match your project's commands.",
+  "_readme": "Claude Code permissions config. Edit allow list to match your project commands.",
 
   "model": "claude-sonnet-4-5",
 
@@ -8,12 +8,6 @@
       "Bash(npm run *)",
       "Bash(npx *)",
       "Bash(node *)",
-      "Bash(pip *)",
-      "Bash(python *)",
-      "Bash(pytest *)",
-      "Bash(php *)",
-      "Bash(composer *)",
-      "Bash(go *)",
       "Bash(git status)",
       "Bash(git log *)",
       "Bash(git diff *)",
@@ -31,38 +25,46 @@
       "Bash(cp *)",
       "Bash(mv *)",
       "Bash(chmod *)",
-      "Bash(curl -s *)",
       "Read(*)",
       "Write(src/**)",
       "Write(app/**)",
       "Write(tests/**)",
       "Write(docs/**)",
-      "Write(public/**)",
       "Write(components/**)",
       "Write(pages/**)",
-      "Write(styles/**)",
       "Write(*.md)",
-      "Write(*.json)",
-      "Write(*.config.*)"
+      "Write(*.json)"
     ],
-
     "deny": [
       "Bash(rm -rf *)",
       "Bash(sudo *)",
-      "Bash(curl * | bash)",
-      "Bash(wget * | bash)",
-      "Bash(chmod 777 *)",
       "Write(.env)",
-      "Write(.env.*)",
-      "Write(*.secret)",
-      "Write(*.pem)",
-      "Write(*.key)"
+      "Write(.env.*)"
     ]
   },
 
   "hooks": {
-    "SessionStart":  ".claude/hooks/session-start.sh",
-    "PostToolUse":   ".claude/hooks/post-tool.sh",
-    "PreCommit":     ".claude/hooks/pre-commit.sh"
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-tool.sh"
+          }
+        ]
+      }
+    ]
   }
 }
