@@ -9,7 +9,7 @@
 git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && node claude-setup/init.js && rm -rf claude-setup
 ```
 
-## Commands (15)
+## Commands (16)
 
 | Command | What it does |
 | ------- | ------------ |
@@ -24,6 +24,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | /refactor | Clean up and improve code |
 | /optimize | Compress prompts, save tokens |
 | /context | Smart file loading |
+| /task | Track work items during session |
 | /guard | Pre-deploy safety checks |
 | /deploy | Deploy to staging or production |
 | /document | Auto-generate documentation |
@@ -40,7 +41,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | security-auditor | Scans for vulnerabilities |
 | docs-writer | Generates documentation from source |
 
-## Skills (11 — auto-load)
+## Skills (12 — auto-load)
 
 | Skill | Auto-loads when |
 | ----- | --------------- |
@@ -52,6 +53,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | incremental-builder | Large feature requests |
 | agent-chain | /ship command used |
 | deploy-guard | Deploy or release keywords |
+| task-tracker | /task used or work items detected |
 | frontend | UI or component tasks |
 | backend | API or server tasks |
 | testing | Test writing tasks |
