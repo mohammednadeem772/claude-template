@@ -9,15 +9,20 @@
 Breaks features into 5 steps with approval gates.
 Steps: PLAN → BACKEND → FRONTEND → TESTS → REVIEW
 
-## RULES
+## CRITICAL RULES
 - NEVER skip step 1 (plan always first)
 - After each step: show summary + ask "Continue to Step X?"
-- User says no → stop, ask what to change
+- User says no → STOP immediately, ask what to change
 - Max 3 files per step, max 2000 tokens
 - Follow CLAUDE.md and .claude/rules/
+- If step fails → STOP entire pipeline, report error, ask how to proceed
+- NEVER skip steps without explicit user permission
+- User must confirm BEFORE each step starts
 
 ## STEP 1 — PLAN
 Read CLAUDE.md, scan existing files, list ALL files to create/modify.
+
+MANDATORY: Show EXACT files before proceeding.
 
 Output:
 ```
@@ -26,8 +31,10 @@ Feature: [Name]
 Backend:  [ ] models/X.js [ ] routes/x.js [ ] validators/xValidator.js
 Frontend: [ ] hooks/useX.js [ ] components/XList.jsx [ ] XForm.jsx
 Tests:    [ ] tests/api/x.test.js [ ] tests/XList.test.jsx
-Estimated: [X] files
-── Complete ── Continue to Step 2? (y/n)
+Estimated: [X] files to be created
+
+⚠️  Files listed above will be created in Step 2-4
+── Complete ── Approve to continue to Step 2? (y/n)
 ```
 
 ## STEP 2 — BACKEND

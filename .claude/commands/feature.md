@@ -17,7 +17,7 @@
 #   /feature create onboarding flow (Flutter)
 
 ## ─────────────────────────────────────────────────────────
-## STEP 0 — READ BEFORE WRITING ANYTHING
+## STEP 0 — PLAN FIRST (MANDATORY — NO EXCEPTIONS)
 ## ─────────────────────────────────────────────────────────
 
 Before creating a single file:
@@ -39,7 +39,7 @@ Before creating a single file:
    - Mobile (React Native) → use View/Text/TouchableOpacity
    - Mobile (Flutter) → use Widget/Scaffold/Column
 
-4. Print the plan before writing:
+4. Print the plan and WAIT for approval:
    ```
    Feature Plan: [Feature Name]
    ─────────────────────────────
@@ -62,8 +62,17 @@ Before creating a single file:
      [ ] src/routes/index.js  (add employee route)
      [ ] src/navigation/AppNavigator.js  (add screen)
    ─────────────────────────────
-   Proceeding...
+   
+   ⚠️  APPROVAL REQUIRED — Proceed? (y/n)
    ```
+
+## MANDATORY FEATURE RULES
+- Plan first — show EXACT file list before coding
+- Wait for user approval — NO exceptions
+- Max 400 lines per file — hard limit (split if larger)
+- Loading + Error + Empty states — mandatory in ALL data components
+- Test file required — for EVERY new file created
+- Never proceed without explicit approval
 
 ## ─────────────────────────────────────────────────────────
 ## STEP 1 — BACKEND (Node.js / Express / FastAPI / Next.js API)

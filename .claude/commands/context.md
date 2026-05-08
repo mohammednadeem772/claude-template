@@ -11,6 +11,8 @@
 
 ## Smart Loading Rules
 
+CRITICAL: Max 5 files per task — no exceptions
+
 **Bug Fix** → affected file + imports + test (500-1,500 tokens)
 
 ```
@@ -19,15 +21,22 @@ Fix pagination in EmployeeList.jsx
   ✅ src/hooks/useEmployees.js (if imported)
   ✅ src/api/employees.js (if API call exists)
   ✅ __tests__/EmployeeList.test.jsx
+  ❌ SKIP: dependency folders, unrelated components
 ```
 
 **New Feature** → 1 similar component + shared components + API/test examples (1,000-2,500 tokens)
+  - Max 1 reference component (not 3-4)
+  - NEVER load dependency folders
+  - ALWAYS read CLAUDE.md before loading any file
 
 **Review** → requested files + relevant .claude/rules (500-1,800 tokens)
+  - Skip files not directly related to review scope
 
 **Refactor** → target file + direct imports + importers (800-2,000 tokens)
+  - Skip depth-2+ dependencies
 
 **Testing** → file to test + 1 example test (400-1,200 tokens)
+  - Load ONLY target file + one example test
 
 ## Never Load
 ```
