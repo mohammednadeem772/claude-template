@@ -9,74 +9,47 @@
 /ship --review-only               # Only run code-reviewer on existing code
 ```
 
-## Agent Chain
+## AGENT CHAIN
+
+Runs sequentially (each waits for previous):
 
 1. **feature-builder** → builds complete FE + BE
 2. **test-writer** → writes tests for all new code
 3. **code-reviewer** → reviews for bugs + quality
 4. **security-auditor** → checks for vulnerabilities
 
-CRITICAL RULES:
+## CRITICAL RULES
+
 - Each agent MUST report completion before next starts
 - Critical issue found → STOP entire chain immediately
 - Show progress [1/4] → [2/4] → [3/4] → [4/4]
 - Final summary MANDATORY after all agents complete
 - Max 2000 tokens per agent
 
-## Step 1: Parse Arguments
+## AGENT RESPONSIBILITIES
 
-- feature = args (everything except flags)
-- skipSecurity = --quick flag present
-- reviewOnly = --review-only flag present
+**feature-builder:** Build FE + BE code (no tests). Follow CLAUDE.md + .claude/rules/. Report files created.
 
-## Step 2: Agent 1 — feature-builder
+**test-writer:** Write tests for new code. Backend: API tests (all endpoints). Frontend: component tests (render, events, states). Follow testing rules.
 
-Prompt: "Build complete full-stack feature: {feature}. Follow CLAUDE.md tech stack and conventions. Include: models, API routes, validation, frontend components, hooks. Max 2000 tokens. Report files created."
+**code-reviewer:** Review for bugs, logic errors, missing error handling, code quality, conventions. NO fixes — identify only. Report: critical (stop) vs warnings (continue).
 
-Stop if: cannot build feature
+**security-auditor:** Check SQL injection, XSS, CSRF, auth bypass, hardcoded secrets, authorization. NO fixes — identify only. Report: critical (block) vs warnings (note).
 
-## Step 3: Agent 2 — test-writer (skip if reviewOnly)
+## PROGRESS OUTPUT (show after each agent)
 
-Prompt: "Write comprehensive tests for feature just built. Files from agent 1: {list}. Include: backend API tests, frontend component tests, edge cases. Follow testing rules in CLAUDE.md. Max 2000 tokens."
-
-Stop if: tests cannot be created
-
-## Step 4: Agent 3 — code-reviewer
-
-Prompt: "Review all code for bugs and quality issues. Files to review: {list from agents 1 + 2}. Check: bugs, logic errors, missing error handling, security (basic), code quality, convention violations. Report: critical → stop, warnings → continue. Max 2000 tokens."
-
-Stop if: critical issues found
-
-## Step 5: Agent 4 — security-auditor (skip if --quick)
-
-Prompt: "Security audit for new feature. Files: {list from all agents}. Check: SQL injection, XSS, CSRF, auth bypass, authorization issues, hardcoded secrets, insecure dependencies. Report: critical → block, warnings → note. Max 2000 tokens."
-
-Stop if: critical security issues found
-
-## Progress Output (MANDATORY after each agent)
-
-Show progress indicator after EVERY agent completes:
-
-```text
+```
 ── Shipping: {feature} ──
 [1/4] feature-builder  → ✅ Complete (created 8 files)
-      Waiting for next agent...
 [2/4] test-writer      → ✅ Complete (added 12 tests)
-      Waiting for next agent...
 [3/4] code-reviewer    → ✅ Complete (0 critical, 2 warnings)
-      Waiting for next agent...
-[4/4] security-auditor → 🔴 CRITICAL ISSUES FOUND
-── Ship BLOCKED: fix security issues before proceeding ──
+[4/4] security-auditor → ✅ Complete (no vulnerabilities)
+── Ship complete ──
 ```
 
-EACH agent must report:
-- Completion status
-- What it did (files created, tests added, issues found)
-- Critical/blocking issues (if any)
+## FINAL SUMMARY (success)
 
-## Final Summary (success)
-
-```text
+```
 ✅ Ship complete: {feature}
 
 Pipeline results:
@@ -88,9 +61,9 @@ Pipeline results:
 Ready to commit.
 ```
 
-## Final Summary (blocked)
+## FINAL SUMMARY (blocked)
 
-```text
+```
 🔴 Ship blocked: {feature}
 
 Agent {N} ({name}) found critical issues:
@@ -99,3 +72,12 @@ Agent {N} ({name}) found critical issues:
 
 Fix these before shipping.
 ```
+
+## FLAGS
+
+- `--quick` — skip security-auditor (faster)
+- `--review-only` — skip feature-builder and test-writer, only review existing code
+
+## STOP CONDITIONS
+
+Stop if: agent cannot complete task, code-reviewer finds CRITICAL issues, security-auditor finds CRITICAL vulnerabilities, agent exceeds 2000 tokens
