@@ -1,181 +1,76 @@
-# claude-template (Private)
+# claude-template
 
-> Plug-and-play Claude Code setup — one command, any project.
+> Plug-and-play Claude Code setup for any project.
+> One command installs everything.
 
----
-
-## Setup (One Time — Repo Owner)
-
-### Step 1 — Create Private GitHub Repo
-
-1. Go to **github.com → New repository**
-2. Name it: `claude-template`
-3. Set to **Private** ✅
-4. **Do NOT** add README or .gitignore (we have our own)
-5. Click **Create repository**
-
-### Step 2 — Push this template
+## Installation
 
 ```bash
-cd claude-template
-git init
-git add .
-git commit -m "feat: initial claude code template"
-git remote add origin https://github.com/YOUR_ORG/claude-template.git
-git branch -M main
-git push -u origin main
+git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && node claude-setup/init.js && rm -rf claude-setup
 ```
 
-### Step 3 — Create a GitHub Personal Access Token (PAT)
-
-This is needed so team members can install from private repo.
-
-1. GitHub → Settings → Developer Settings → Personal Access Tokens → **Tokens (classic)**
-2. Click **Generate new token (classic)**
-3. Name: `claude-template-access`
-4. Expiration: No expiration (or 1 year)
-5. Scopes: check ✅ `repo` (full repo access)
-6. Click **Generate token**
-7. **Copy it** — you only see it once
-
-Share this token with your team (via password manager, not Slack/email plain text).
-
----
-
-## Install in Any Project (Team Members)
-
-### One-time machine setup
-
-```bash
-# Save your GitHub token (only once per machine)
-git config --global url."https://YOUR_TOKEN@github.com/".insteadOf "https://github.com/"
-```
-
-Replace `YOUR_TOKEN` with the token from Step 3 above.
-
-### Install in any project
-
-```bash
-# Go to your project
-cd your-project
-
-# Download and run installer (one command)
-npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
-```
-
-Replace `YOUR_ORG` with your GitHub username or organization name.
-
----
-
-## What the installer does
-
-| Action | Detail |
-|--------|--------|
-| Creates `.claude/` | hooks, commands, agents, skills, rules |
-| Skips existing files | Never overwrites your CLAUDE.md or existing configs |
-| Makes hooks executable | `chmod +x` on all `.sh` files |
-| Updates `.gitignore` | Adds Claude-specific entries |
-| Detects your stack | React Native, Next.js, Flutter, Python, Node — shows relevant tips |
-
----
-
-## Commands available after install
+## Commands (15)
 
 | Command | What it does |
-|---------|-------------|
-| `/feature create X` | Build complete FE + BE feature |
-| `/fix X not working` | Find root cause and fix any bug |
-| `/refactor X` | Clean up and improve code |
-| `/test src/X.ts` | Write tests for any file |
-| `/review src/X.ts` | Code review with severity levels |
-| `/deploy staging` | Deploy with test gate |
-| `/document src/X` | Auto-generate docs |
-| `/bootstrap component X` | Scaffold new component + test |
+| ------- | ------------ |
+| /auto | Detects task type from plain language |
+| /build | Incremental feature builder with approval steps |
+| /ship | Full pipeline: build → test → review → security |
+| /feature | Build complete FE+BE feature |
+| /fix | Find and fix any bug |
+| /review | Code review with severity levels |
+| /test | Write tests for any file |
+| /test-all | Run full test suite |
+| /refactor | Clean up and improve code |
+| /optimize | Compress prompts, save tokens |
+| /context | Smart file loading |
+| /guard | Pre-deploy safety checks |
+| /deploy | Deploy to staging or production |
+| /document | Auto-generate documentation |
+| /bootstrap | Scaffold new component, screen, or API |
 
----
+## Agents (6)
 
-## Keeping template up to date
+| Agent | What it does |
+| ----- | ------------ |
+| code-reviewer | Reviews code, never modifies files |
+| debugger | Finds root cause of any bug |
+| test-writer | Writes tests for any file |
+| feature-builder | Builds full-stack features |
+| security-auditor | Scans for vulnerabilities |
+| docs-writer | Generates documentation from source |
 
-### Update the template repo
-```bash
-cd claude-template
-# Make your changes
-git add .
-git commit -m "feat: add new command"
-git push
-```
+## Skills (11 — auto-load)
 
-### Pull latest into a project
-```bash
-cd your-project
-npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
-```
+| Skill | Auto-loads when |
+| ----- | --------------- |
+| auto-selector | Every prompt |
+| token-optimizer | Long or repeated prompts |
+| context-loader | Any file read operation |
+| fullstack-patterns | Feature or screen tasks |
+| debugging-patterns | Fix or bug keywords |
+| incremental-builder | Large feature requests |
+| agent-chain | /ship command used |
+| deploy-guard | Deploy or release keywords |
+| frontend | UI or component tasks |
+| backend | API or server tasks |
+| testing | Test writing tasks |
 
-New files will be added. Existing files will be skipped (safe to run multiple times).
+## How it works
 
----
+1. Install the template in any project
+2. Claude reads your CLAUDE.md to understand your project
+3. Use slash commands or plain language
+4. Claude auto-detects task type and applies correct patterns
 
-## Team workflow
+## Stack
 
-```
-Repo Owner
-  → Creates private GitHub repo
-  → Pushes this template
-  → Creates PAT token
-  → Shares token with team (via password manager)
+Works with any project.
+Claude reads your CLAUDE.md and adapts automatically.
+No stack configuration needed.
 
-Team Member (first time)
-  → git config --global url."https://TOKEN@github.com/".insteadOf "https://github.com/"
-  → cd new-project
-  → npx degit ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+## CLAUDE.md
 
-Team Member (any project after that)
-  → cd any-project
-  → npx degit ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
-```
-
----
-
-## File structure of this repo
-
-```
-claude-template/
-├── init.js                      ← installer script
-├── README.md                    ← this file
-├── CLAUDE.md                    ← template (only copied if project has none)
-├── .env.example                 ← template (only copied if project has none)
-├── .gitignore                   ← template gitignore
-└── .claude/
-    ├── settings.json
-    ├── hooks/
-    │   ├── session-start.sh     ← project info on start
-    │   ├── post-tool.sh         ← auto-format + line count warning
-    │   └── pre-commit.sh        ← tests + lint before commit
-    ├── commands/
-    │   ├── feature.md           ← /feature
-    │   ├── fix.md               ← /fix
-    │   ├── refactor.md          ← /refactor
-    │   ├── test.md              ← /test
-    │   ├── review.md            ← /review
-    │   ├── deploy.md            ← /deploy
-    │   ├── document.md          ← /document
-    │   └── bootstrap.md         ← /bootstrap
-    ├── agents/
-    │   ├── code-reviewer.md
-    │   ├── debugger.md
-    │   ├── test-writer.md
-    │   ├── feature-builder.md
-    │   ├── security-auditor.md
-    │   └── docs-writer.md
-    ├── skills/
-    │   ├── frontend.md
-    │   ├── backend.md
-    │   ├── testing.md
-    │   ├── fullstack-patterns.md
-    │   └── debugging-patterns.md
-    └── rules/
-        ├── general.md
-        ├── frontend.md
-        ├── api.md
-        └── testing.md
-```
+The only file you need to edit after install.
+Tell Claude your stack, commands, and conventions.
+Keep it under 200 lines.
