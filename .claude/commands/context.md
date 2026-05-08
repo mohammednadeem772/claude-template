@@ -9,9 +9,16 @@
 /context smart          # Auto-detect from last prompt
 ```
 
-## Smart Loading Rules
+## CRITICAL RULE: Read CLAUDE.md First
 
-CRITICAL: Max 5 files per task — no exceptions
+Before loading ANY files:
+1. **Always read CLAUDE.md first** — understand project structure
+2. Use actual folder paths from CLAUDE.md (never assume)
+3. Use naming conventions from CLAUDE.md
+4. Detect what exists: frontend? backend? tests?
+5. Adapt loading strategy to actual project architecture
+
+Max 5 files per task — no exceptions
 
 **Bug Fix** → affected file + imports + test (500-1,500 tokens)
 
@@ -24,10 +31,11 @@ Fix pagination in EmployeeList.jsx
   ❌ SKIP: dependency folders, unrelated components
 ```
 
-**New Feature** → 1 similar component + shared components + API/test examples (1,000-2,500 tokens)
+**New Feature** → CLAUDE.md + 1 similar component + shared components (1,000-2,500 tokens)
+  - Read CLAUDE.md to understand project architecture
+  - Find similar feature in actual project structure
   - Max 1 reference component (not 3-4)
-  - NEVER load dependency folders
-  - ALWAYS read CLAUDE.md before loading any file
+  - Use paths from CLAUDE.md, never hardcode
 
 **Review** → requested files + relevant .claude/rules (500-1,800 tokens)
   - Skip files not directly related to review scope
@@ -71,9 +79,12 @@ Refactor:    800-2,000    (1-4 files)
 Testing:     400-1,200    (1-3 files)
 ```
 
-## Rules
+## Rules (Project-Aware)
 
+- **Always start with CLAUDE.md** — understand architecture first
 - Load depth-1 imports only (skip depth-2+)
+- Use actual folder structure from project (never assume paths)
 - Max 1 reference component for new features
 - Start minimal, load more only if needed
+- If path doesn't exist → check CLAUDE.md for correct structure
 - Clear between unrelated tasks

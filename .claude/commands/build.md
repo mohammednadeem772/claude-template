@@ -19,8 +19,18 @@ Steps: PLAN → BACKEND → FRONTEND → TESTS → REVIEW
 - NEVER skip steps without explicit user permission
 - User must confirm BEFORE each step starts
 
-## STEP 1 — PLAN
-Read CLAUDE.md, scan existing files, list ALL files to create/modify.
+## STEP 1 — DETECT & PLAN
+
+**Architecture Detection:**
+- Read CLAUDE.md — detect project type (fullstack/API-only/frontend-only/mobile)
+- Check what layers exist (frontend? backend? tests?)
+- Use actual folder structure and naming conventions from project
+
+**Adaptive Planning:**
+- If API-only → plan backend steps only, skip frontend
+- If frontend-only → plan UI steps only, skip backend
+- If no tests → skip test step but WARN user
+- If mobile → adapt component patterns for platform
 
 MANDATORY: Show EXACT files before proceeding.
 
@@ -37,41 +47,21 @@ Estimated: [X] files to be created
 ── Complete ── Approve to continue to Step 2? (y/n)
 ```
 
-## STEP 2 — BACKEND
+## STEP 2 — BACKEND (if project has backend)
 Create model + validation + API routes. Follow .claude/rules/api.md.
+If project is frontend-only → skip to Step 3.
+If step fails → STOP, report error, ask how to proceed.
 
-Output:
-```
-── Step 2 of 5: BACKEND ──
-Created: ✓ models/Employee.js ✓ validators/employeeValidator.js ✓ routes/employees.js
-API: GET/POST/PUT/DELETE /api/employees
-── Complete ── Files: 3 | Next: Step 3 — FRONTEND | Continue? (y/n)
-```
-
-## STEP 3 — FRONTEND
+## STEP 3 — FRONTEND (if project has frontend)
 Create hook + components. Follow .claude/rules/frontend.md.
-Handle: loading/error/empty states, typed props, validation.
+If project is API-only → skip to Step 4.
+If step fails → STOP, report error, ask how to proceed.
 
-Output:
-```
-── Step 3 of 5: FRONTEND ──
-Created: ✓ hooks/useEmployees.js ✓ EmployeeList.jsx ✓ EmployeeForm.jsx
-Features: list + search + filters + pagination + form + validation
-── Complete ── Files: 3 | Next: Step 4 — TESTS | Continue? (y/n)
-```
-
-## STEP 4 — TESTS
+## STEP 4 — TESTS (if project has test framework)
 Backend: API tests (200/400/401/404/409)
 Frontend: Component tests (render/events/states)
-Follow .claude/rules/testing.md.
-
-Output:
-```
-── Step 4 of 5: TESTS ──
-Created: ✓ tests/api/employees.test.js (12) ✓ tests/EmployeeList.test.jsx (8)
-Coverage: Backend 15 tests, Frontend 8 tests | Run: npm test
-── Complete ── Files: 2 | Next: Step 5 — REVIEW | Continue? (y/n)
-```
+If no test framework detected → WARN user and skip.
+If step fails → STOP, report error, ask how to proceed.
 
 ## STEP 5 — REVIEW
 Security: validation, auth, authorization, SQL injection, secrets

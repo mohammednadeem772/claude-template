@@ -7,14 +7,23 @@
 /feature build product inventory with search and filters
 ```
 
-## STEP 0 — PLAN FIRST (MANDATORY)
+## STEP 0 — DETECT ARCHITECTURE & PLAN (MANDATORY)
 
 Before creating a single file:
 
-1. Read CLAUDE.md — understand stack, folder structure, naming conventions, test framework
-2. Scan 2-3 existing similar files to match patterns
-3. Detect platform from CLAUDE.md (web/mobile)
-4. Print plan and WAIT for approval:
+1. **Read CLAUDE.md** — detect project architecture:
+   - Has frontend? (React/Vue/mobile) → plan UI components
+   - Has backend? (API/server) → plan endpoints
+   - Has both? → plan full-stack
+   - API-only? → skip frontend steps
+   - Frontend-only? → skip backend steps
+   - Test framework? → plan tests accordingly
+
+2. **Scan existing files** — match patterns from similar features in THIS project
+
+3. **Adapt plan** based on what exists — use actual folder structure and naming from CLAUDE.md
+
+4. **Print adaptive plan** and WAIT for approval:
 
 ```
 Feature Plan: [Feature Name]
@@ -46,15 +55,23 @@ Config updates:
 - Loading + Error + Empty states — mandatory in ALL data components
 - Test file required — for EVERY new file created
 
-## STEP 1 — BACKEND
-Model/Schema + Validation + API routes (list/get/create/update/delete) + Controller + Tests
+## ADAPTIVE EXECUTION
 
-## STEP 2 — FRONTEND
-Custom hook (API + state) + List component (search/filter/pagination) + Form (create/edit + validation) + Required states (loading/error/empty/success)
+**If project has BACKEND:**
+- Model/Schema + Validation + API routes + Controller + Tests
 
-## STEP 3 — TESTS
-Backend: 200/201/400/401/404/409 cases
-Frontend: render/loading/error/empty/interaction tests
+**If project has FRONTEND:**
+- Custom hook (API + state) + List component + Form + Required states (loading/error/empty/success)
+
+**If project has TESTS:**
+- Backend: 200/201/400/401/404/409 cases
+- Frontend: render/loading/error/empty/interaction tests
+
+**If step fails:**
+- STOP immediately
+- Report exact error
+- Ask user how to proceed
+- Never assume next step will work
 
 ## COMPLETION SUMMARY
 

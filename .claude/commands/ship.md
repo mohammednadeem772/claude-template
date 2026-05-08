@@ -9,14 +9,21 @@
 /ship --review-only               # Only run code-reviewer on existing code
 ```
 
-## AGENT CHAIN
+## STEP 0 — DETECT ARCHITECTURE
+
+Before running agents:
+1. Read CLAUDE.md — detect project architecture
+2. Determine what exists: frontend? backend? tests?
+3. Brief each agent with project-specific context
+
+## AGENT CHAIN (adaptive based on project)
 
 Runs sequentially (each waits for previous):
 
-1. **feature-builder** → builds complete FE + BE
-2. **test-writer** → writes tests for all new code
+1. **feature-builder** → builds based on detected architecture (FE/BE/both/API-only)
+2. **test-writer** → writes tests if test framework exists (skip if none, warn user)
 3. **code-reviewer** → reviews for bugs + quality
-4. **security-auditor** → checks for vulnerabilities
+4. **security-auditor** → checks for vulnerabilities (skip with --quick flag)
 
 ## CRITICAL RULES
 
@@ -26,15 +33,15 @@ Runs sequentially (each waits for previous):
 - Final summary MANDATORY after all agents complete
 - Max 2000 tokens per agent
 
-## AGENT RESPONSIBILITIES
+## AGENT RESPONSIBILITIES (project-aware)
 
-**feature-builder:** Build FE + BE code (no tests). Follow CLAUDE.md + .claude/rules/. Report files created.
+**feature-builder:** Build based on project architecture from CLAUDE.md. If API-only → backend only. If frontend-only → UI only. If both → full-stack. Follow project conventions.
 
-**test-writer:** Write tests for new code. Backend: API tests (all endpoints). Frontend: component tests (render, events, states). Follow testing rules.
+**test-writer:** Write tests IF test framework detected. Backend tests if API exists. Frontend tests if UI exists. Skip if no test framework (warn user).
 
-**code-reviewer:** Review for bugs, logic errors, missing error handling, code quality, conventions. NO fixes — identify only. Report: critical (stop) vs warnings (continue).
+**code-reviewer:** Review based on project stack. Check patterns from .claude/rules/. NO fixes — identify only. Critical → stop chain.
 
-**security-auditor:** Check SQL injection, XSS, CSRF, auth bypass, hardcoded secrets, authorization. NO fixes — identify only. Report: critical (block) vs warnings (note).
+**security-auditor:** Scan for vulnerabilities in actual project stack. Check what's relevant to detected architecture. Critical → block ship.
 
 ## PROGRESS OUTPUT (show after each agent)
 
