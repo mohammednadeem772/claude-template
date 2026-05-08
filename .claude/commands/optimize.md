@@ -33,6 +33,26 @@ Good prompts are:
 ## OPTIMIZATION RULES
 ## ─────────────────────────────────────────────────────────
 
+### Rule 0: Context-Aware Optimization
+```
+NEVER repeat information already in CLAUDE.md:
+  ❌ "I'm using React with Node.js" → already in CLAUDE.md
+  ❌ "The project uses Tailwind CSS" → already in CLAUDE.md
+  ✅ Just state the task directly
+
+ALWAYS use /context before large tasks:
+  ✅ /context load fix pagination in EmployeeList
+  ✅ /context load create appointment booking feature
+
+Start new conversation for unrelated topics:
+  ✅ Finish current task → new conversation
+  ❌ Mix unrelated tasks in same conversation
+
+Batch related tasks in one message:
+  ✅ "Fix pagination + add search filter + update tests"
+  ❌ Three separate messages for related changes
+```
+
 ### Rule 1: Remove Filler Words
 ```
 ❌ BEFORE (38 tokens)

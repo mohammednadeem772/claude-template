@@ -25,10 +25,18 @@
 
 Before changing anything:
 1. Read every file mentioned in the bug description
-2. Trace the full data flow (user action → state → API → DB → response → UI)
-3. Find the EXACT line that is wrong — not just the area
-4. Understand WHY it's wrong, not just what to change
-5. Fix the root cause — not the symptom
+2. Read the COMPLETE affected file — not just snippets
+3. Trace the full data flow (user action → state → API → DB → response → UI)
+4. Find the EXACT line that is wrong — not just the area
+5. Understand WHY it's wrong, not just what to change
+6. Fix the ROOT CAUSE — never fix symptoms only
+
+## CRITICAL DEBUGGING RULES
+- Always find root cause before fixing anything
+- Never fix symptoms — fix the source
+- Read affected file completely before editing
+- Show before/after diff for every fix
+- Add prevention note after every fix (test suggestion)
 
 ## ─────────────────────────────────────────────────────────
 ## DIAGNOSIS PLAYBOOK — by bug type
@@ -323,6 +331,8 @@ API data not showing:
 ## OUTPUT FORMAT (always use this structure)
 ## ─────────────────────────────────────────────────────────
 
+MANDATORY: Show complete before/after diff for EVERY fix
+
 ```
 Bug: [name of the bug]
 Root cause: [one sentence — WHY it was broken]
@@ -332,10 +342,10 @@ Files changed:
   📝 src/components/EmployeeList.jsx  line 67
 
 ─── BEFORE (broken) ────────────────────
-[exact code that was wrong]
+[exact code that was wrong — show complete function/block]
 
 ─── AFTER (fixed) ──────────────────────
-[exact corrected code]
+[exact corrected code — show complete function/block]
 
 ─── WHY ────────────────────────────────
 [one paragraph explaining root cause and why fix works]
@@ -343,13 +353,18 @@ Files changed:
 ─── TEST ───────────────────────────────
 [how to verify the fix manually]
 [if a test should be added — show it]
+
+─── PREVENTION ─────────────────────────
+[how to prevent this bug class in future]
 ```
 
 ## ─────────────────────────────────────────────────────────
-## PREVENTION NOTE (always add at end)
+## PREVENTION NOTE (MANDATORY after every fix)
 ## ─────────────────────────────────────────────────────────
 
-After every fix, suggest how to prevent this class of bug:
+After every fix, you MUST suggest how to prevent this class of bug:
 - "Add pagination integration test to prevent offset regressions"
 - "Add form submission test to catch this pattern early"
 - "Add loading state reset to finally block pattern in all hooks"
+- "Add E2E test covering this user flow"
+- "Add validation test for this edge case"

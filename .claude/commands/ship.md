@@ -16,7 +16,12 @@
 3. **code-reviewer** → reviews for bugs + quality
 4. **security-auditor** → checks for vulnerabilities
 
-Each agent gets output from previous. Stop on critical issues. Max 2000 tokens per agent.
+CRITICAL RULES:
+- Each agent MUST report completion before next starts
+- Critical issue found → STOP entire chain immediately
+- Show progress [1/4] → [2/4] → [3/4] → [4/4]
+- Final summary MANDATORY after all agents complete
+- Max 2000 tokens per agent
 
 ## Step 1: Parse Arguments
 
@@ -48,16 +53,26 @@ Prompt: "Security audit for new feature. Files: {list from all agents}. Check: S
 
 Stop if: critical security issues found
 
-## Progress Output (show after each agent)
+## Progress Output (MANDATORY after each agent)
+
+Show progress indicator after EVERY agent completes:
 
 ```text
 ── Shipping: {feature} ──
-[1/4] feature-builder  → ✅ done
-[2/4] test-writer      → ✅ done
-[3/4] code-reviewer    → ✅ done / ⚠️ 2 warnings
-[4/4] security-auditor → ✅ done / 🔴 CRITICAL
-── Ship blocked: fix security issues ──
+[1/4] feature-builder  → ✅ Complete (created 8 files)
+      Waiting for next agent...
+[2/4] test-writer      → ✅ Complete (added 12 tests)
+      Waiting for next agent...
+[3/4] code-reviewer    → ✅ Complete (0 critical, 2 warnings)
+      Waiting for next agent...
+[4/4] security-auditor → 🔴 CRITICAL ISSUES FOUND
+── Ship BLOCKED: fix security issues before proceeding ──
 ```
+
+EACH agent must report:
+- Completion status
+- What it did (files created, tests added, issues found)
+- Critical/blocking issues (if any)
 
 ## Final Summary (success)
 

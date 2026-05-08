@@ -1,46 +1,24 @@
 # Skill: Debugging Patterns
 
 ## Auto-loads when Claude detects:
-- "/fix" command
-- "not working"
-- "broken"
-- "bug"
-- "issue"
-- "error"
-- "not submitting / not loading / not updating"
+- "/fix" command | "not working" | "broken" | "bug" | "issue" | "error"
 
 ## The Debugging Mindset
 
 ```
-1. READ before you FIX
-2. TRACE the full flow — don't jump to assumptions
-3. Find the EXACT line — not the general area
-4. Fix ROOT CAUSE — not the symptom
-5. VERIFY with a test
+1. READ COMPLETE file before fixing — not just snippets
+2. TRACE full flow — don't jump to assumptions
+3. Find EXACT line — not general area
+4. Fix ROOT CAUSE — never fix symptoms only
+5. Show BEFORE/AFTER diff for every fix
+6. Add PREVENTION note (test suggestion) after every fix
 ```
 
 ## Universal Data Flow to Trace
 
 ```
-User action
-    ↓
-Component state update  ← is state changing?
-    ↓
-useEffect / watch triggered  ← is this running?
-    ↓
-API call made  ← check Network tab
-    ↓
-Request reaches server  ← check server logs
-    ↓
-Input validation  ← is it passing?
-    ↓
-DB query executed  ← is query correct?
-    ↓
-Response returned  ← correct status? correct shape?
-    ↓
-FE receives response  ← is data being set in state?
-    ↓
-UI re-renders  ← is component reading correct state?
+User action → State update → useEffect triggered → API call → Server receives →
+Validation → DB query → Response → FE receives → State set → UI re-render
 ```
 
 ## Quick Lookup — Common Errors
@@ -58,25 +36,36 @@ UI re-renders  ← is component reading correct state?
 | 401 on protected route | auth token not sent in request headers |
 | 403 on own resource | ownership check using wrong field (userId vs _id) |
 
-## Fix Output Template
+## Fix Output Template (MANDATORY format)
 
-Always use:
+Always show complete before/after diff:
+
 ```
 Bug: [name]
-Root cause: [one sentence]
+Root cause: [one sentence — WHY it was broken]
 
-Before (broken):
-  [exact wrong code]
+Files changed:
+  📝 file.js line 34
 
-After (fixed):
-  [exact corrected code]
+─── BEFORE (broken) ────────────────────
+[exact wrong code — show complete function/block]
 
-Why this works:
-  [one paragraph]
+─── AFTER (fixed) ──────────────────────
+[exact corrected code — show complete function/block]
 
-Verify by:
-  [manual test steps]
+─── WHY ────────────────────────────────
+[one paragraph explaining root cause and why fix works]
 
-Prevent with:
-  [suggested test case]
+─── TEST ───────────────────────────────
+[manual verification steps + test code if needed]
+
+─── PREVENTION (MANDATORY) ─────────────
+[how to prevent this bug class in future]
 ```
+
+## Critical Rules
+- Always find root cause before fixing
+- Never fix symptoms — fix the source
+- Read affected file COMPLETELY before editing
+- Show before/after diff for EVERY fix
+- Add prevention note after EVERY fix

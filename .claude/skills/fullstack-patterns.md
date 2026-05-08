@@ -22,51 +22,16 @@ NAVIGATION      → Route/screen registered
 TESTS           → Backend tests + Frontend tests
 ```
 
-## Decision Tree — Which Template to Use
+## Stack Detection
 
-```
-Stack?
-├── React + Node.js/Express
-│   ├── Model: Mongoose schema OR Prisma model
-│   ├── API:   Express router + controller
-│   ├── FE:    React component + useXxx hook
-│   └── Test:  Jest + Supertest + RTL
-│
-├── Next.js (App Router)
-│   ├── Model: Prisma model
-│   ├── API:   app/api/[resource]/route.ts
-│   ├── FE:    app/[resource]/page.tsx
-│   └── Test:  Vitest + RTL
-│
-├── React + FastAPI
-│   ├── Model: SQLAlchemy model + Alembic migration
-│   ├── API:   FastAPI router + Pydantic schemas
-│   ├── FE:    React component + useXxx hook
-│   └── Test:  Pytest + Jest + RTL
-│
-├── React Native
-│   ├── API:   Same as above (Node or FastAPI)
-│   ├── FE:    Screen with View/FlatList/TouchableOpacity
-│   └── Test:  Jest + RNTL
-│
-└── Flutter
-    ├── API:   Same as above
-    ├── FE:    Widget + Provider/Bloc
-    └── Test:  flutter_test + mockito
-```
+React+Node → Mongoose/Prisma+Express+hooks+Jest/Supertest/RTL | Next.js → Prisma+app/api+Vitest/RTL | React+FastAPI → SQLAlchemy+Pytest/Jest | RN → View/FlatList+RNTL | Flutter → Widget/Provider+flutter_test
 
 ## Response Format: pagination standard
 
 ALL list endpoints and screens MUST return and handle:
 ```js
 // API response
-{
-  data: {
-    items: [...],
-    pagination: { page: 1, limit: 20, total: 100, totalPages: 5 }
-  },
-  error: null
-}
+{ data: { items: [...], pagination: { page: 1, limit: 20, total: 100, totalPages: 5 } }, error: null }
 
 // FE state
 const [page, setPage] = useState(1)
@@ -80,14 +45,12 @@ offset = (page - 1) * limit
 
 ALL forms MUST have:
 ```js
-// validate() returns errors object
 const validate = () => {
   const errs = {}
   if (!form.field) errs.field = 'Field is required'
   return errs
 }
 
-// handleSubmit blocks if errors
 const handleSubmit = async (e) => {
   e.preventDefault()
   const errs = validate()
@@ -104,3 +67,11 @@ error!=null     → show <ErrorMessage /> with retry button
 data.length==0  → show <EmptyState /> with create CTA
 data.length>0   → show the actual content
 ```
+
+## MANDATORY Feature Rules (never skip)
+
+- Plan first — show EXACT file list before coding
+- Wait for approval — NO exceptions
+- Max 400 lines per file — split if larger
+- Loading + Error + Empty states — required in ALL data components
+- Test file required — for EVERY new file created
