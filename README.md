@@ -54,7 +54,7 @@ cd your-project
 npx degit mohammednadeem772/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
 
-> After install → read the [Full Guide](https://github.com/mohammednadeem772/claude-template/blob/main/GUIDE.md) to get started.
+> After install → read the [Full Guide](https://github.com/mohammednadeem772/claude-template/blob/main/Guide.md) to get started.
 
 ## Quick Start (5 Minutes)
 
@@ -76,7 +76,7 @@ Plain English also works — no slash commands needed:
 - "write tests for the auth module"
 
 Claude learns your project through CLAUDE.md and loaded context.
-> Full guide → [GUIDE.md](https://github.com/mohammednadeem772/claude-template/blob/main/GUIDE.md)
+> Full guide → [Guide.md](https://github.com/mohammednadeem772/claude-template/blob/main/Guide.md)
 
 ---
 
@@ -234,6 +234,6 @@ claude-template/
 
 | Resource           | Link                                                                                                         |
 | ------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Full Guide         | [GUIDE.md](https://github.com/mohammednadeem772/claude-template/blob/main/GUIDE.md)                          |
+| Full Guide         | [Guide.md](https://github.com/mohammednadeem772/claude-template/blob/main/Guide.md)                          |
 | Commands Reference | [.claude/commands/](https://github.com/mohammednadeem772/claude-template/tree/main/.claude/commands)         |
 | Skills Reference   | [.claude/skills/](https://github.com/mohammednadeem772/claude-template/tree/main/.claude/skills)             |
