@@ -48,7 +48,11 @@ function copyFileIfMissing(src, dest) {
 }
 
 function makeExecutable(p) {
-  try { fs.chmodSync(p, '755') } catch {}
+  try {
+    fs.chmodSync(p, '755')
+  } catch {
+    // chmod not supported on Windows — skipping silently
+  }
 }
 
 function detectStack() {
@@ -73,6 +77,254 @@ function getProjectName() {
   } catch {
     return path.basename(TARGET_DIR)
   }
+}
+
+// ── Generate CLAUDE.md from detected stack ───────────────────
+function generateClaudeMd(projectName, stack) {
+  const stackConfigs = {
+    'react-native': {
+      frontend: 'React Native',
+      backend: 'Node.js + Express (if needed)',
+      database: 'SQLite (local) / PostgreSQL (remote)',
+      styling: 'NativeWind (Tailwind CSS for RN) — className only, no StyleSheet.create',
+      auth: 'JWT + react-native-keychain',
+      testing: 'Jest + React Native Testing Library',
+      deploy: 'EAS Build / React Native CLI',
+      install: 'npm install',
+      dev: 'npx react-native start',
+      test: 'npm test',
+      build: 'npx react-native run-android / run-ios',
+      migrate: '# No migrations (SQLite auto-init)',
+      conventions: [
+        'No inline styles — NativeWind className only',
+        'No StyleSheet.create — ever',
+        'State → Redux Toolkit (useAppDispatch / useAppSelector)',
+        'Business logic → custom hooks only, never in components',
+        'Navigation → React Navigation v6',
+      ],
+      limits: 'components/ → 150 | screens/ → 200 | hooks/ → 80 | services/ → 120',
+    },
+    'nextjs': {
+      frontend: 'Next.js 14 (App Router)',
+      backend: 'Next.js API Routes (app/api/)',
+      database: 'PostgreSQL + Prisma',
+      styling: 'Tailwind CSS — className only, no inline styles',
+      auth: 'NextAuth.js / getServerSession',
+      testing: 'Jest + React Testing Library',
+      deploy: 'Vercel / Railway',
+      install: 'npm install',
+      dev: 'npm run dev',
+      test: 'npm test',
+      build: 'npm run build',
+      migrate: 'npx prisma migrate dev',
+      conventions: [
+        'API routes → app/api/[resource]/route.ts only',
+        'Auth → getServerSession on every protected route',
+        'DB → Prisma only, no raw SQL',
+        'Styling → Tailwind className only',
+        'Server components by default, client only when needed',
+      ],
+      limits: 'components/ → 150 | pages/ → 200 | hooks/ → 80 | lib/ → 120',
+    },
+    'react': {
+      frontend: 'React 18 + TypeScript',
+      backend: 'Node.js + Express (separate)',
+      database: 'PostgreSQL / MongoDB',
+      styling: 'Tailwind CSS — className only, no inline styles',
+      auth: 'JWT tokens',
+      testing: 'Jest + React Testing Library',
+      deploy: 'Vercel / Netlify / Docker',
+      install: 'npm install',
+      dev: 'npm run dev',
+      test: 'npm test',
+      build: 'npm run build',
+      migrate: '# Add your migration command',
+      conventions: [
+        'Logic → custom hooks, never inside components',
+        'Styling → Tailwind className only',
+        'State → Redux Toolkit / Zustand',
+        'API calls → services/ folder only',
+      ],
+      limits: 'components/ → 150 | pages/ → 200 | hooks/ → 80 | services/ → 120',
+    },
+    'flutter': {
+      frontend: 'Flutter (Dart)',
+      backend: 'Node.js + Express / FastAPI',
+      database: 'SQLite (local) / PostgreSQL (remote)',
+      styling: 'Flutter Theme system — Theme.of(context) only',
+      auth: 'JWT + flutter_secure_storage',
+      testing: 'Flutter Test + Mockito',
+      deploy: 'Play Store / App Store / Firebase Distribution',
+      install: 'flutter pub get',
+      dev: 'flutter run',
+      test: 'flutter test',
+      build: 'flutter build apk / ios',
+      migrate: '# No migrations (SQLite auto-init)',
+      conventions: [
+        'State → Provider / Bloc — match existing pattern',
+        'Colors → Theme.of(context) only — never hardcoded',
+        'Navigation → GoRouter or Navigator — match existing setup',
+        'Widgets → separate files, max 200 lines each',
+      ],
+      limits: 'widgets/ → 150 | screens/ → 200 | blocs/ → 120 | services/ → 120',
+    },
+    'python': {
+      frontend: '[Add your frontend or none]',
+      backend: 'Python + FastAPI / Django',
+      database: 'PostgreSQL + SQLAlchemy / Django ORM',
+      styling: '[Add if applicable]',
+      auth: 'JWT + python-jose / Django auth',
+      testing: 'Pytest',
+      deploy: 'Docker / Railway / VPS',
+      install: 'pip install -r requirements.txt',
+      dev: 'uvicorn main:app --reload / python manage.py runserver',
+      test: 'pytest',
+      build: 'docker build .',
+      migrate: 'alembic upgrade head / python manage.py migrate',
+      conventions: [
+        'API → FastAPI routers / Django views only',
+        'DB → SQLAlchemy models / Django ORM — no raw SQL',
+        'Validation → Pydantic schemas on every endpoint',
+        'Auth → JWT middleware on all protected routes',
+      ],
+      limits: 'routers/ → 120 | models/ → 100 | services/ → 120 | tests/ → 200',
+    },
+    'laravel': {
+      frontend: 'Blade / Vue / React (Inertia)',
+      backend: 'Laravel (PHP)',
+      database: 'MySQL / PostgreSQL',
+      styling: 'Tailwind CSS',
+      auth: 'Laravel Sanctum / Breeze',
+      testing: 'PHPUnit / Pest',
+      deploy: 'Forge / Vapor / Docker',
+      install: 'composer install && npm install',
+      dev: 'php artisan serve',
+      test: 'php artisan test',
+      build: 'npm run build',
+      migrate: 'php artisan migrate',
+      conventions: [
+        'Business logic → Service classes only',
+        'DB → Eloquent ORM — no raw queries',
+        'Auth → Sanctum middleware on protected routes',
+        'Validation → Form Request classes',
+      ],
+      limits: 'Controllers/ → 100 | Services/ → 120 | Models/ → 100 | tests/ → 200',
+    },
+    'node': {
+      frontend: '[Add your frontend or none]',
+      backend: 'Node.js + Express / Fastify',
+      database: 'PostgreSQL + Prisma / MongoDB',
+      styling: '[Add if applicable]',
+      auth: 'JWT tokens',
+      testing: 'Jest / Vitest',
+      deploy: 'Railway / Render / Docker / VPS',
+      install: 'npm install',
+      dev: 'npm run dev',
+      test: 'npm test',
+      build: 'npm run build',
+      migrate: 'npx prisma migrate dev',
+      conventions: [
+        'All API URLs → src/config/endpoints.ts — never inline',
+        'Auth → JWT middleware on every protected route',
+        'DB → Parameterized queries only — no string concat',
+        'Validation → Zod / Joi on every endpoint',
+      ],
+      limits: 'routes/ → 80 | controllers/ → 100 | services/ → 120 | models/ → 80',
+    },
+  }
+
+  const cfg = stackConfigs[stack] || stackConfigs['node']
+
+  return `# ${projectName}
+
+## Project Overview
+[One paragraph: what this project does, who uses it, main purpose.]
+
+## Tech Stack
+- Frontend: ${cfg.frontend}
+- Backend: ${cfg.backend}
+- Database: ${cfg.database}
+- Styling: ${cfg.styling}
+- Auth: ${cfg.auth}
+- Testing: ${cfg.testing}
+- Deploy: ${cfg.deploy}
+
+## Dev Commands
+\`\`\`
+# Install dependencies
+${cfg.install}
+
+# Start dev server
+${cfg.dev}
+
+# Run tests
+${cfg.test}
+
+# Build for production
+${cfg.build}
+
+# Database migrations
+${cfg.migrate}
+\`\`\`
+
+## Folder Structure
+\`\`\`
+[Describe YOUR project layout here]
+src/
+  components/     <- reusable UI components
+  features/       <- feature modules
+  hooks/          <- custom hooks
+  services/       <- API and data logic
+  store/          <- state management
+  utils/          <- helpers
+  config/         <- app configuration
+\`\`\`
+
+## Coding Conventions
+${cfg.conventions.map(c => `- ${c}`).join('\n')}
+- No inline business logic — hooks and services only
+- Component naming: PascalCase
+- No console.log in production code
+
+## Key Rules (Claude MUST follow)
+1. Never put secrets or API keys in code — .env only
+2. Every new feature needs a test file
+3. All API endpoints must validate input
+4. Always handle loading + error + empty states in UI
+5. Reuse existing components — never duplicate
+6. Functions max 40 lines — split if longer
+7. Follow existing architecture — never assume structure
+8. Read this file at the start of every session
+9. At session start — silently read .claude/skills/auto-selector.md
+   and apply skill patterns throughout the session
+
+## Important Context
+[Add project-specific details:
+- Multi-tenant? SaaS? Single user?
+- Payment system (Stripe, PayPal)?
+- Third-party APIs?
+- Legacy areas to avoid?
+- Special rules for this project?]
+
+## Source of Truth Priority
+1. CLAUDE.md (this file)
+2. Active approved task
+3. Existing architecture
+4. User prompt
+
+## File Line Limits
+${cfg.limits}
+
+## Auto-Load Skills
+Read silently at session start and apply throughout:
+- .claude/skills/auto-selector.md      — always active
+- .claude/skills/debugging-patterns.md — when fixing bugs
+- .claude/skills/incremental-builder.md — when building features
+- .claude/skills/deploy-guard.md        — before any deploy
+- .claude/skills/recovery-engine.md     — when steps fail
+- .claude/skills/error-analyzer.md      — when errors appear
+- .claude/skills/token-optimizer.md     — when context is long
+`
 }
 
 // ── Main ─────────────────────────────────────────────────────
@@ -111,8 +363,9 @@ function main() {
   if (fs.existsSync(hooksDir)) {
     for (const f of fs.readdirSync(hooksDir)) {
       if (f.endsWith('.sh')) {
+        const isWindows = process.platform === 'win32'
         makeExecutable(path.join(hooksDir, f))
-        ok(`.claude/hooks/${f} — executable`)
+        ok(`.claude/hooks/${f} — ${isWindows ? 'copied (chmod skipped on Windows)' : 'executable'}`)
       }
     }
   }
@@ -124,13 +377,9 @@ function main() {
   if (fs.existsSync(claudeMdDest)) {
     skip(`CLAUDE.md already exists — ${c.green}your file is untouched${c.reset}`)
   } else {
-    const claudeMdSrc = path.join(TEMPLATE_DIR, 'CLAUDE.md')
-    if (fs.existsSync(claudeMdSrc)) {
-      let content = fs.readFileSync(claudeMdSrc, 'utf8')
-      content = content.replace(/\[PROJECT_NAME\]/g, projectName)
-      fs.writeFileSync(claudeMdDest, content)
-      ok(`CLAUDE.md created — ${c.yellow}edit it and fill in your stack${c.reset}`)
-    }
+    const content = generateClaudeMd(projectName, stack)
+    fs.writeFileSync(claudeMdDest, content)
+    ok(`CLAUDE.md created — ${c.yellow}stack: ${stack} detected — fill in Important Context${c.reset}`)
   }
   log()
 
@@ -222,7 +471,7 @@ function main() {
   log()
 
   const hasClaude = fs.existsSync(path.join(TARGET_DIR, 'CLAUDE.md'))
-  const needsEdit = hasClaude && fs.readFileSync(path.join(TARGET_DIR, 'CLAUDE.md'), 'utf8').includes('[PROJECT_NAME]')
+  const needsEdit = hasClaude && fs.readFileSync(path.join(TARGET_DIR, 'CLAUDE.md'), 'utf8').includes('[One paragraph')
 
   if (!hasClaude) {
     warn(`No CLAUDE.md found — create one so Claude knows your stack`)
