@@ -51,7 +51,7 @@ git config --global url."https://YOUR_TOKEN@github.com/".insteadOf "https://gith
 
 ```bash
 cd your-project
-npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+npx degit mohammednadeem772/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
 
 ## Quick Start (5 Minutes)
@@ -177,7 +177,7 @@ Claude learns your project through CLAUDE.md and loaded context.
 cd claude-template && git add . && git commit -m "feat: update" && git push
 
 # Pull latest into any project (safe — skips existing files)
-npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+npx degit mohammednadeem772/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
 
 ---
