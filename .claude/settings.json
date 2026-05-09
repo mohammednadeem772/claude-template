@@ -1,7 +1,7 @@
 {
   "_readme": "Claude Code permissions config. Edit allow list to match your project commands.",
 
-  "model": "claude-sonnet-4-5",
+  "model": "claude-sonnet-4-6",
 
   "permissions": {
     "allow": [
@@ -62,6 +62,17 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/post-tool.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-commit.sh"
           }
         ]
       }

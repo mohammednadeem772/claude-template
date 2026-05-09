@@ -64,6 +64,11 @@ src/
 8. Paginate all list endpoints — never unlimited data
 9. Follow existing architecture — never assume structure
 10. Read this file at the start of every session
+11. At session start — read these skill files silently:
+    .claude/skills/auto-selector.md
+    .claude/skills/token-optimizer.md
+    .claude/skills/context-loader.md
+    Then apply their patterns throughout the session.
 
 ## Important Context
 [Write what Claude needs to know:
@@ -89,3 +94,14 @@ src/
 
 Verify: wc -l CLAUDE.md
 Must be under 200 lines.
+
+## Auto-Load Skills
+
+Read these files silently at session start and apply throughout:
+- .claude/skills/auto-selector.md     — always active
+- .claude/skills/debugging-patterns.md — when fixing bugs
+- .claude/skills/incremental-builder.md — when building features
+- .claude/skills/deploy-guard.md       — before any deploy
+- .claude/skills/recovery-engine.md    — when steps fail
+- .claude/skills/error-analyzer.md     — when errors appear
+- .claude/skills/token-optimizer.md    — when context is long

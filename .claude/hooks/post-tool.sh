@@ -44,6 +44,27 @@ case "$TOOL_NAME" in
         fi
         ;;
     esac
+
+    # Line count warning
+    if [ -f "$FILE" ]; then
+      LINES=$(wc -l < "$FILE" | tr -d ' ')
+      LIMIT=200
+
+      case "$EXT" in
+        ts|tsx|js|jsx) LIMIT=200 ;;
+        sh) LIMIT=60 ;;
+        md) LIMIT=300 ;;
+      esac
+
+      if [ "$LINES" -gt "$LIMIT" ]; then
+        echo ""
+        echo "  ⚠  LINE LIMIT WARNING"
+        echo "  File : $FILE"
+        echo "  Lines: $LINES (limit: $LIMIT)"
+        echo "  → Consider splitting this file"
+        echo ""
+      fi
+    fi
     ;;
 
   Bash)
