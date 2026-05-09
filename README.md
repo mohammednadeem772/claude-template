@@ -54,6 +54,28 @@ cd your-project
 npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
 
+## Quick Start (5 Minutes)
+
+1. Install template (see above)
+2. Edit CLAUDE.md — add your stack, commands, conventions
+3. Run: claude
+4. Try these:
+
+```
+/fix login not working
+/build employee dashboard
+/analyze-error "TypeError: cannot read properties of undefined"
+```
+
+Plain English also works — no slash commands needed:
+- "login broken on mobile"
+- "build employee dashboard"
+- "why is the API returning 500"
+- "write tests for the auth module"
+
+Claude learns your project through CLAUDE.md and loaded context.
+> Full guide: see GUIDE.md
+
 ---
 
 ## What the installer does
@@ -65,6 +87,25 @@ npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/ini
 | Makes hooks executable | chmod +x on all .sh files |
 | Updates .gitignore | Adds Claude-specific entries |
 | Detects your stack | React Native, Next.js, Flutter, Python, Node |
+
+---
+
+## Which Command Should I Use?
+
+| Situation | Use |
+|-----------|-----|
+| Something is broken | /fix |
+| Have an error message | /analyze-error |
+| Small feature (1-2 files) | /feature |
+| Large feature (multi-step) | /build |
+| Production-ready feature | /ship |
+| Write tests | /test |
+| Code review | /review |
+| Clean up messy code | /refactor |
+| Before deploying | /guard then /deploy |
+| Previous step failed | /retry |
+| Multiple tasks in session | /task |
+| Not sure | /auto or plain English |
 
 ---
 
@@ -153,6 +194,18 @@ Team Member (first time on a machine)
 Any project install
   → npx degit ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
+
+---
+
+## Hooks (Auto-Run Scripts)
+
+| Hook | Runs when |
+|------|-----------|
+| session-start.sh | New Claude Code session begins |
+| post-tool.sh | After any file is modified |
+| pre-commit.sh | Before Claude stages a git commit |
+
+Hooks run automatically. Edit them in .claude/hooks/ to add project-specific checks.
 
 ---
 
