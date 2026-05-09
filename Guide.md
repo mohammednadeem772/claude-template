@@ -43,7 +43,7 @@ With this template, Claude:
 Run this single command inside your project folder:
 
 ```bash
-npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+npx degit mohammednadeem772/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
 ```
 
 What this does:
