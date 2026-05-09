@@ -36,12 +36,9 @@ Never compress: code, errors, user requirements, decisions.
 
 **Context Window:** Above 70% capacity → auto-suggest `/compress --aggressive`
 
-**Verbose Thinking:** Long reasoning chain detected → compress to conclusion
-
 ## Silent Operation
 
 Runs in background during response generation.
-
 Interrupts only for:
 
 1. Compression suggestion (context heavy)
@@ -66,7 +63,7 @@ Interrupts only for:
 
 ## Auto-Suggestion Format
 
-```
+```text
 ── Context Heavy (70%) ────────────
 Suggestion: /compress
 Estimated savings: ~2,400 tokens

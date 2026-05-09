@@ -92,12 +92,10 @@ src/
 - services/ → max 120 lines
 - store/slices/ → max 100 lines
 
-Verify: wc -l CLAUDE.md
-Must be under 200 lines.
-
 ## Auto-Load Skills
 
 Read these files silently at session start and apply throughout:
+
 - .claude/skills/auto-selector.md     — always active
 - .claude/skills/debugging-patterns.md — when fixing bugs
 - .claude/skills/incremental-builder.md — when building features

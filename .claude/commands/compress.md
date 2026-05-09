@@ -19,9 +19,9 @@
 - Remove: filler phrases, step-by-step thinking, repetition
 - Show before/after token estimate
 
-## OUTPUT FORMAT
+## Output Format
 
-```
+```text
 ── Compression Report ─────────────
 Before: ~X tokens
 After:  ~Y tokens
@@ -59,29 +59,16 @@ Removed:
 
 ## Compression Modes
 
-### Default Mode (`/compress`)
+**Default** (`/compress`) — removes obvious redundancy, preserves all critical information.
 
-Removes obvious redundancy while preserving all critical information.
+**Reasoning** (`/compress reasoning`) — collapses verbose thinking to conclusions only.
+`Before: "Let me think... after analyzing..." → After: "Solution: Use Redux with async thunks."`
 
-### Reasoning Mode (`/compress reasoning`)
+**Context** (`/compress context`) — summarizes loaded file context to key points only.
 
-Collapses verbose AI thinking into final conclusions only.
+**Aggressive** (`/compress --aggressive`) — maximum compression, use when context window is critical.
 
-```
-Before: "Let me think... first I need to consider... after analyzing... therefore..."
-After: "Solution: Use Redux with async thunks."
-```
-
-### Context Mode (`/compress context`)
-
-Summarizes loaded file context to key points only.
-
-### Aggressive Mode (`/compress --aggressive`)
-
-Maximum compression — keeps only essential information.
-Use when context window is critical.
-
-## CRITICAL RULES
+## Critical Rules
 
 1. **Never compress written code** — all code stays intact
 2. **Never compress user requirements** — keep user decisions
@@ -98,17 +85,6 @@ Auto-suggested when:
 - Context window above 70%
 - Heavy reasoning detected
 
-## Examples
-
-```
-Context before: 12,000 tokens
-After /compress: 8,500 tokens
-Saved: 3,500 tokens (29%)
-
-Heavy reasoning detected...
-Suggestion: /compress reasoning
-```
-
 ## Preview Mode
 
 ```bash
@@ -119,7 +95,6 @@ Suggestion: /compress reasoning
 ✂️ 680 tokens — verbose reasoning
 ✂️ 220 tokens — filler phrases
 Total removal: ~1,350 tokens (18%)
-
 Proceed? (y/n)
 ───────────────────────────────────
 ```
