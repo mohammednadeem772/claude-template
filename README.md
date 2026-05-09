@@ -9,7 +9,7 @@
 git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && node claude-setup/init.js && rm -rf claude-setup
 ```
 
-## Commands (18)
+## Commands (19)
 
 | Command | What it does |
 | ------- | ------------ |
@@ -31,6 +31,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | /deploy | Deploy to staging or production |
 | /document | Auto-generate documentation |
 | /bootstrap | Scaffold new component, screen, or API |
+| /analyze-error | Diagnose and explain errors with fix suggestions |
 
 ## Agents (6)
 
@@ -43,7 +44,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | security-auditor | Scans for vulnerabilities |
 | docs-writer | Generates documentation from source |
 
-## Skills (14 — auto-load)
+## Skills (15 — auto-load)
 
 | Skill | Auto-loads when |
 | ----- | --------------- |
@@ -58,6 +59,7 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | task-tracker | /task used or work items detected |
 | recovery-engine | Pipeline step fails or error detected |
 | reasoning-compressor | Verbose reasoning or heavy context detected |
+| error-analyzer | Error messages or /analyze-error command |
 | frontend | UI or component tasks |
 | backend | API or server tasks |
 | testing | Test writing tasks |
