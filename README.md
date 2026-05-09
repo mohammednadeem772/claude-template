@@ -1,23 +1,82 @@
-# claude-template
+# claude-template (Private)
 
-> Plug-and-play Claude Code setup for any project.
-> One command installs everything.
+> Plug-and-play Claude Code setup — one command, any project.
 
-## Installation
+---
+
+## Setup (One Time — Repo Owner)
+
+### Step 1 — Create Private GitHub Repo
+
+1. Go to github.com → New repository
+2. Name it: claude-template
+3. Set to Private
+4. Do NOT add README or .gitignore
+5. Click Create repository
+
+### Step 2 — Push this template
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && node claude-setup/init.js && rm -rf claude-setup
+cd claude-template
+git init
+git add .
+git commit -m "feat: initial claude code template"
+git remote add origin https://github.com/YOUR_ORG/claude-template.git
+git branch -M main
+git push -u origin main
 ```
+
+### Step 3 — Create a GitHub Personal Access Token (PAT)
+
+1. GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic)
+2. Click Generate new token (classic)
+3. Name: claude-template-access
+4. Expiration: No expiration (or 1 year)
+5. Scopes: check repo
+6. Click Generate token — copy it immediately
+
+Share via password manager. Never plain text in Slack or email.
+
+---
+
+## Install in Any Project (Team Members)
+
+### One-time machine setup
+
+```bash
+git config --global url."https://YOUR_TOKEN@github.com/".insteadOf "https://github.com/"
+```
+
+### Install in any project
+
+```bash
+cd your-project
+npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+```
+
+---
+
+## What the installer does
+
+| Action | Detail |
+|--------|--------|
+| Creates .claude/ | commands, skills, agents, rules, hooks |
+| Skips existing files | Never overwrites your CLAUDE.md or configs |
+| Makes hooks executable | chmod +x on all .sh files |
+| Updates .gitignore | Adds Claude-specific entries |
+| Detects your stack | React Native, Next.js, Flutter, Python, Node |
+
+---
 
 ## Commands (19)
 
 | Command | What it does |
-| ------- | ------------ |
-| /auto | Detects task type from plain language |
+|---------|-------------|
+| /auto | Smart task detection from plain language |
 | /build | Incremental feature builder with approval steps |
 | /ship | Full pipeline: build → test → review → security |
 | /feature | Build complete FE+BE feature |
-| /fix | Find and fix any bug |
+| /fix | Find root cause and fix any bug |
 | /review | Code review with severity levels |
 | /test | Write tests for any file |
 | /test-all | Run full test suite |
@@ -33,10 +92,12 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | /bootstrap | Scaffold new component, screen, or API |
 | /analyze-error | Diagnose and explain errors with fix suggestions |
 
+---
+
 ## Agents (6)
 
 | Agent | What it does |
-| ----- | ------------ |
+|-------|-------------|
 | code-reviewer | Reviews code, never modifies files |
 | debugger | Finds root cause of any bug |
 | test-writer | Writes tests for any file |
@@ -44,10 +105,12 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | security-auditor | Scans for vulnerabilities |
 | docs-writer | Generates documentation from source |
 
+---
+
 ## Skills (15 — auto-load)
 
 | Skill | Auto-loads when |
-| ----- | --------------- |
+|-------|----------------|
 | auto-selector | Every prompt |
 | token-optimizer | Long or repeated prompts |
 | context-loader | Any file read operation |
@@ -64,21 +127,48 @@ git clone https://github.com/YOUR_USERNAME/claude-template.git claude-setup && n
 | backend | API or server tasks |
 | testing | Test writing tasks |
 
-## How it works
+---
 
-1. Install the template in any project
-2. Claude reads your CLAUDE.md to understand your project
-3. Use slash commands or plain language
-4. Claude auto-detects task type and applies correct patterns
+## Keeping template up to date
 
-## Stack
+```bash
+# Update template repo
+cd claude-template && git add . && git commit -m "feat: update" && git push
 
-Works with any project.
-Claude reads your CLAUDE.md and adapts automatically.
-No stack configuration needed.
+# Pull latest into any project (safe — skips existing files)
+npx degit YOUR_ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+```
 
-## CLAUDE.md
+---
 
-The only file you need to edit after install.
-Tell Claude your stack, commands, and conventions.
-Keep it under 200 lines.
+## Team workflow
+
+```
+Repo Owner
+  → Create private repo → push template → create PAT → share via password manager
+
+Team Member (first time on a machine)
+  → git config --global url."https://TOKEN@github.com/".insteadOf "https://github.com/"
+
+Any project install
+  → npx degit ORG/claude-template claude-setup --force && node claude-setup/init.js && rm -rf claude-setup
+```
+
+---
+
+## File structure
+
+```
+claude-template/
+├── init.js
+├── README.md
+├── CLAUDE.md
+├── .env.example
+├── .gitignore
+└── .claude/
+    ├── commands/   ← 19 commands
+    ├── agents/     ← 6 agents
+    ├── skills/     ← 15 skills
+    ├── rules/
+    └── hooks/
+```
